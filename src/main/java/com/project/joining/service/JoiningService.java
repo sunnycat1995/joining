@@ -10,14 +10,21 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class JoiningService {
-    private final FillerService service = new FillerService();
+    private final List<Student> students;
+    private final List<StudentSubject> studentSubject;
+    private final List<Subject> subjects;
+
+    public JoiningService() {
+        final FillerService service = new FillerService();
+
+        students = service.fillStudents();
+        studentSubject = service.fillStudentsSubjects();
+        subjects = service.fillSubjects();
+    }
 
     public void join() {
-        final List<Student> students = service.fillStudents();
-        final List<StudentSubject> studentSubject = service.fillStudentsSubjects();
-        final List<Subject> subjects = service.fillSubjects();
-
         final List<Object> allOptions = new ArrayList<>();
+
         studentSubject.forEach(s -> {
             students.stream().filter(student -> student.getId().equals(s.getStudentId())).findFirst().ifPresent(c1 -> {
                 subjects.stream().filter(subject -> subject.getId().equals(s.getSubjectId())).findFirst().ifPresent(c2 -> {
@@ -25,7 +32,6 @@ public class JoiningService {
                 });
             });
         });
-
         System.out.println(allOptions);
     }
 }
